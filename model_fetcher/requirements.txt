@@ -1,0 +1,16 @@
+# requirements.txt - model_fetcher tooling
+#
+# hf_recommend_and_fetch.py runs on the Python 3.8+ STANDARD LIBRARY alone.
+# There is nothing to install for it - this file is intentionally empty of
+# packages. (pip install -r requirements.txt is a no-op, kept for workflow
+# consistency.)
+#
+# Runtime requirements instead:
+#   - llm_hw.py must sit in the same folder as hf_recommend_and_fetch.py
+#     (included in this directory; master copy lives in scripts/crossplat/).
+#   - Optional: a Hugging Face read token in hf_config.json ("hf_token"),
+#     only needed for gated repos (Gemma, Llama, ...).
+#
+# Companion scripts elsewhere in this project do need packages:
+#   scripts/crossplat/hf_model_sizer.py -> huggingface_hub
+# huggingface_hub   # <- uncomment only if you also use hf_model_sizer.py
