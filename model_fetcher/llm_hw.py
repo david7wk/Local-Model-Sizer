@@ -279,27 +279,31 @@ def windows_display_gpus():
         base = (r"SYSTEM\CurrentControlSet\Control\Class"
                 r"\{4d36e968-e325-11ce-bfc1-08002be10318}")
         i = 0
-        while i < 64:
+        while i < 128:  # increased scan range
             try:
                 key = winreg.OpenKey(
                     winreg.HKEY_LOCAL_MACHINE, f"{base}\\{i:04d}")
             except OSError:
-                break
+                if i > 64: break # stop if we find a gap after common range
+                i += 1
+                continue
             with key:
                 try:
                     desc, _ = winreg.QueryValueEx(key, "DriverDesc")
                 except OSError:
                     i += 1
                     continue
+                v = None
                 for val in ("HardwareInformation.qwMemorySize",
                             "HardwareInformation.MemorySize"):
                     try:
                         v, _ = winreg.QueryValueEx(key, val)
                         if isinstance(v, int) and v > 64 * 1024 ** 2:
-                            reg_vram[desc.strip().lower()] = v
                             break
                     except OSError:
                         continue
+                if v:
+                    reg_vram[desc.strip().lower()] = v
             i += 1
     except Exception:
         pass

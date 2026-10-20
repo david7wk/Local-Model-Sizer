@@ -31,6 +31,8 @@ Studio) can load it immediately, and works equally with **Ollama** and
 |---|---|
 | [`model_fetcher/`](model_fetcher/) | The tool. **Start at [`model_fetcher/README.md`](model_fetcher/README.md)** — full setup (venv), options, captured example runs, download destination, and ecosystem notes. |
 | [`model_fetcher/DEVELOPMENT_LOG.md`](model_fetcher/DEVELOPMENT_LOG.md) | Project chronicle: inception, design decisions, session-by-session progress, roadmap. |
+| [`tests/manual_sessions/`](tests/manual_sessions/) | Logs from manual test sessions (machine probes and download verifications). |
+| [`scripts/`](scripts/) | Maintenance and reproduction scripts, including issue reproduction artifacts. |
 
 ## Quick start
 

@@ -1,0 +1,32 @@
+(.venv) PS C:\Users\david\Repos\Local-Model-Sizer\model_fetcher> python hf_recommend_and_fetch.py
+==============================================================================
+MACHINE SUMMARY
+==============================================================================
+OS          : Windows 11 (AMD64)
+CPU         : AMD64 Family 26 Model 36 Stepping 0, AuthenticAMD  (24 threads)
+System RAM  : 31.3 GB total, 6.2 GB available
+NVIDIA GPU  : NVIDIA GeForce RTX 5070 Laptop GPU - 11.9 GB VRAM (sm_120)
+AMD GPU     : AMD Radeon(TM) 890M Graphics - 0.5 GB
+LLM budget  : ~11.1 GB usable (NVIDIA VRAM (NVIDIA GeForce RTX 5070 Laptop GPU) minus 0.8 GB reserve)
+
+Searching Hugging Face for models that FIT this machine (budget ~11.1 GB) ...
+
+#  Repo                                                Quant         Size  Downloads
+--------------------------------------------------------------------------------------------
+1  ibm-granite/granite-4.2-8b-GGUF                     Q8_0        8.70GB  260,944
+2  Qwen/Qwen2.5-Coder-7B-Instruct-GGUF                 Q8_0        7.54GB  331,459
+3  ibm-granite/granite-4.2-3b-GGUF                     BF16        6.82GB  259,595
+4  AnkitAI/Parable-Granite-4.1-3B-Claude-Fable-5-GGUF  F16         6.34GB  172,402
+5  Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF               Q8_0        1.76GB  213,663
+
+Verdicts: every pick fully fits the budget (weights + ~15% runtime/KV).
+Higher size at the same fit = better quality quant.
+
+Download one of these into: C:\Users\david\.lmstudio\models
+Pick 1-5 to download, or press Enter to quit: 4
+
+Downloading F16 (1 file(s), ~6.34 GB) from AnkitAI/Parable-Granite-4.1-3B-Claude-Fable-5-GGUF ...
+  -> Parable-Granite-4.1-3B-Claude-Fable-5-GGUF-F16.gguf
+  saved: C:\Users\david\.lmstudio\models\AnkitAI\Parable-Granite-4.1-3B-Claude-Fable-5-GGUF\Parable-Granite-4.1-3B-Claude-Fable-5-GGUF-F16.gguf
+
+Done. In LM Studio / Bionic: open the models directory and rescan, then load the new model.

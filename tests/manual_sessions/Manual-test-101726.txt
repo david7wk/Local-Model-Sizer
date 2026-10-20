@@ -1,0 +1,72 @@
+(.venv) PS C:\Users\david\Repos\Local-Model-Sizer\model_fetcher> python hf_recommend_and_fetch.py --help
+usage: hf_recommend_and_fetch.py [-h] [--budget BUDGET] [--dir DIR] [--list-only]
+
+hf_recommend_and_fetch.py (v1)
+==============================
+1. Probes the current machine's hardware & memory (via llm_hw.py).
+2. Reads an optional Hugging Face token from hf_config.json (next to this
+   script) -- only needed for GATED repos (Gemma, Llama, ...).
+3. Searches Hugging Face for popular GGUF models, computes which quantization
+   of each actually FITS this machine's budget, and lists the 5 best picks.
+4. Offers to download one of them, with a single-line percentage progress
+   display (resumable), into a model directory that both Bionic and
+   LM Studio read: ~/.lmstudio/models/<publisher>/<repo>/<file>.gguf
+   (override with "model_dir" in hf_config.json or --dir).
+
+Fully platform independent: Python 3.8+ standard library only -- no pip
+installs, no compilers. Works on macOS (Apple Silicon incl. M5), Windows 11,
+and Linux. GPU vendors supported for budgeting: NVIDIA (nvidia-smi, even off
+PATH), AMD Radeon (Linux sysfs/rocm-smi and Windows WMI/registry), and Apple
+Silicon unified memory.
+
+Usage:
+    python hf_recommend_and_fetch.py                 # interactive
+    python hf_recommend_and_fetch.py --list-only     # just show the 5 picks
+    python hf_recommend_and_fetch.py --budget 5.2
+    python hf_recommend_and_fetch.py --dir "D:/LLM/models"
+
+Config (hf_config.json, auto-created on first run):
+    hf_token            optional, gated-repo access (HF settings/tokens)
+    model_dir           override destination ("" = ~/.lmstudio/models)
+    budget_gb_override  force a budget instead of auto-detection (null = auto)
+    max_results         how many models to list (default 5)
+    scan_limit          how many HF search results to evaluate (default 40)
+
+options:
+  -h, --help       show this help message and exit
+  --budget BUDGET  override usable memory budget in GB
+  --dir DIR        override destination model directory
+  --list-only      show the 5 picks and skip the download prompt
+(.venv) PS C:\Users\david\Repos\Local-Model-Sizer\model_fetcher> python hf_recommend_and_fetch.py
+==============================================================================
+MACHINE SUMMARY
+==============================================================================
+OS          : Windows 11 (AMD64)
+CPU         : AMD64 Family 26 Model 36 Stepping 0, AuthenticAMD  (24 threads)
+System RAM  : 31.3 GB total, 3.9 GB available
+NVIDIA GPU  : NVIDIA GeForce RTX 5070 Laptop GPU - 11.9 GB VRAM (sm_120)
+Adapter     : [AMD] AMD Radeon(TM) 890M Graphics - 0.5 GB
+Adapter     : [NVIDIA] NVIDIA GeForce RTX 5070 Laptop GPU - 11.9 GB
+LLM budget  : ~11.1 GB usable (NVIDIA VRAM (NVIDIA GeForce RTX 5070 Laptop GPU) minus 0.8 GB reserve)
+
+Searching Hugging Face for models that FIT this machine (budget ~11.1 GB) ...
+
+#  Repo                                                Quant         Size  Downloads
+--------------------------------------------------------------------------------------------
+1  ibm-granite/granite-4.2-8b-GGUF                     Q8_0        8.70GB  261,874
+2  Qwen/Qwen2.5-Coder-7B-Instruct-GGUF                 Q8_0        7.54GB  332,009
+3  ibm-granite/granite-4.2-3b-GGUF                     BF16        6.82GB  260,175
+4  AnkitAI/Parable-Granite-4.1-3B-Claude-Fable-5-GGUF  F16         6.34GB  176,161
+5  Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF               Q8_0        1.76GB  211,569
+
+Verdicts: every pick fully fits the budget (weights + ~15% runtime/KV).
+Higher size at the same fit = better quality quant.
+
+Download one of these into: C:\Users\david\.lmstudio\models
+Pick 1-5 to download, or press Enter to quit: 2
+
+Downloading Q8_0 (1 file(s), ~7.54 GB) from Qwen/Qwen2.5-Coder-7B-Instruct-GGUF ...
+  -> qwen2.5-coder-7b-instruct-q8_0.gguf
+  saved: C:\Users\david\.lmstudio\models\Qwen\Qwen2.5-Coder-7B-Instruct-GGUF\qwen2.5-coder-7b-instruct-q8_0.gguf
+
+Done. In LM Studio / Bionic: open the models directory and rescan, then load the new model.

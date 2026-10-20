@@ -283,6 +283,7 @@ def discover_models(cfg, token, budget_gb):
               f"  ({len(picks)} fits so far)", end="", flush=True)
         groups = repo_gguf_groups(repo, token)
         if groups is None:
+            gated_hit += 1
             errors += 1
             continue
         best = best_fit_quant(groups, budget_gb)
@@ -432,16 +433,26 @@ def main():
     print(f"CPU         : {snap['cpu']}  ({snap['cpu_cores']} threads)")
     print(f"System RAM  : {ram / GB:.1f} GB total, "
           f"{(snap.get('avail_ram_bytes') or 0) / GB:.1f} GB available")
+
+    nv_names = set()
     for g in snap.get("nvidia_gpus", []):
+        nv_names.add(g["name"].lower())
         print(f"NVIDIA GPU  : {g['name']} - {g['vram_bytes'] / GB:.1f} GB VRAM "
               f"(sm_{g['compute_cap'].replace('.', '')})")
+
+    amd_names = set()
+    for a in snap.get("amd_gpus", []):
+        amd_names.add(a["name"].lower())
+        vram = f"{a['vram_bytes'] / GB:.1f} GB" if a.get("vram_bytes") else "n/a"
+        print(f"AMD GPU     : {a['name']} - {vram}")
+
     for a in snap.get("display_adapters", []):
+        low_name = a["name"].lower()
+        if low_name in nv_names or low_name in amd_names:
+            continue
         vram = f"{a['vram_bytes'] / GB:.1f} GB" if a.get("vram_bytes") else "n/a"
         print(f"Adapter     : [{a['vendor']}] {a['name']} - {vram}")
-    for a in snap.get("amd_gpus", []):
-        if a not in snap.get("display_adapters", []):
-            vram = f"{a['vram_bytes'] / GB:.1f} GB" if a.get("vram_bytes") else "n/a"
-            print(f"AMD GPU     : {a['name']} - {vram}")
+
     apple = snap.get("apple")
     if apple:
         print(f"Apple chip  : {apple['chip']}"
